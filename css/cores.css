@@ -1,0 +1,38 @@
+:root{
+    --azul-primário: #123458;
+    --cor-secundaria: #F1EFEC;
+    --cor-1: #ebe7e3;
+    --cor-2: #E5E0DA;
+    --cor-3: #E0D8D1;
+    --cor-4: #DAD1C7;
+    --cor-primaria: #D4C9BE;
+}
+
+.fundo-azul{
+    background: var(--azul-primário);
+    color: var(--cor-secundaria)
+}
+.fundo-claro{
+    background: white;
+    color: var(--azul-primário);
+}
+.fundo-escuro{
+    background: var(--cor-primaria);
+    color: var(--cor-secundaria)
+}
+.fundo-1{
+    background: var(--cor-1);
+    color: var(--cor-primaria);
+}
+.fundo-2{
+    background: var(--cor-2);
+    color: var(--cor-primaria);
+}
+.fundo-3{
+    background: var(--cor-3);
+    color: var(--cor-secundaria);
+}
+.fundo-4{
+    background: var(--cor-4);
+    color: var(--cor-secundaria)
+}

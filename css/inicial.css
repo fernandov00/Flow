@@ -1,0 +1,27 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;   
+}
+
+.conteudo-pagina{
+    flex: 1;
+    display: flex;
+}
+
+.navbar{
+    width: 15%;
+    min-width: 24rem;
+    padding: 2rem;
+}
+
+.navbar-content{
+    border-radius: 2rem;
+    height: 100%;
+    padding: 2rem;
+    text-align:center;
+}
+
+.navbar-content li h3{
+    margin: 1rem;
+}
