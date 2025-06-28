@@ -7,21 +7,70 @@
 .conteudo-pagina{
     flex: 1;
     display: flex;
+
 }
 
 .navbar{
     width: 15%;
     min-width: 24rem;
-    padding: 2rem;
+    border-right: 1px solid var(--cor-5);
+    display: flex;
+    flex-direction: column
 }
 
 .navbar-content{
+    flex: 1;
     border-radius: 2rem;
-    height: 100%;
     padding: 2rem;
     text-align:center;
+    margin: 3rem;
+    border: 1px solid var(--cor-5);
 }
 
 .navbar-content li h3{
     margin: 1rem;
+}
+
+.conteudo-principal{
+    display: flex;
+    flex-flow: column wrap;
+    width: 100%;
+    height: 100vh;
+}
+
+.section{
+    padding: 5rem 15rem 0;
+    width: 100%;
+}
+.anotacoes{
+    height: 40vh;
+}
+.anotacoes-content{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+}
+.anotacoes-content h2{
+    margin-bottom: 2rem;
+}
+
+.anotacoes .anotacoes-txt{
+    height: 100%;
+}
+
+
+.anotacoes .anotacoes-txt textarea{
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--cor-5);
+    resize: none;
+    width: 100%;
+    height: 100%;
+    max-height: 40vh;
+}
+
+.anotacoes-content textarea:focus{
+    outline: 1px solid var(--cor-8);
 }

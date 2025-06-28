@@ -1,38 +1,45 @@
 :root{
-    --azul-primário: #123458;
-    --cor-secundaria: #F1EFEC;
-    --cor-1: #ebe7e3;
-    --cor-2: #E5E0DA;
-    --cor-3: #E0D8D1;
-    --cor-4: #DAD1C7;
-    --cor-primaria: #D4C9BE;
+  --cor-1: #ffffff; 
+  --cor-2: #f1f1f1; 
+  --cor-3: #e5e5e5; 
+  --cor-4: #d8d8d8;
+  --cor-5: #cccccc; 
+  --cor-6: #bfbfbf;
+  --cor-7: #b3b3b3;
+  --cor-8: #a6a6a6;
+  --cor-9: #999999; 
+  --cor-10: #8c8c8c;
+  --cor-11: #808080; 
+  --cor-12: #737373;
+  --cor-13: #666666;
+  --cor-14: #595959;
+  --cor-15: #4d4d4d;
+  --cor-16: #404040;
+  --cor-17: #333333;
+  --cor-18: #262626;
+  --cor-19: #1a1a1a;
+  --cor-20: #000000;
+
 }
 
-.fundo-azul{
-    background: var(--azul-primário);
-    color: var(--cor-secundaria)
-}
-.fundo-claro{
-    background: white;
-    color: var(--azul-primário);
-}
-.fundo-escuro{
-    background: var(--cor-primaria);
-    color: var(--cor-secundaria)
-}
-.fundo-1{
+.fundo-branco{
     background: var(--cor-1);
-    color: var(--cor-primaria);
+    color: var(--cor-20);
 }
-.fundo-2{
-    background: var(--cor-2);
-    color: var(--cor-primaria);
-}
-.fundo-3{
+.fundo-cinza-clarissimo{
     background: var(--cor-3);
-    color: var(--cor-secundaria);
+    color: var(--cor-20);
 }
-.fundo-4{
-    background: var(--cor-4);
-    color: var(--cor-secundaria)
+.fundo-cinza-claro{
+  background: var(--cor-5);
+  color: var(--cor-20);
 }
+/* .fundo-cinza{
+
+}
+.fundo-cinza-escuro{
+
+}
+.fundo-preto{
+
+} */
