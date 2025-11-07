@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$user_id = $_SESSION['user_id'];
 $tarefa_id = $_GET['id'] ?? null;
 
 if (!$tarefa_id) {
@@ -17,35 +18,37 @@ if (!$tarefa_id) {
     exit;
 }
 
-// busca a tarefa
-$stmt = $pdo->prepare("SELECT * FROM tarefas WHERE codigo = ? AND cod_user = ?");
-$stmt->execute([$tarefa_id, $_SESSION['user_id']]);
-$tarefa = $stmt->fetch();
+$sql = "SELECT * FROM tarefas WHERE codigo = $tarefa_id AND cod_user = $user_id";
+$result = mysqli_query($conexao, $sql);
+$tarefa = mysqli_fetch_assoc($result);
 
 if (!$tarefa) {
     header("Location: tasks.php");
     exit;
 }
 
-// Processamento SIMPLES do formulário
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $titulo = trim($_POST['titulo']);
-    $descricao = trim($_POST['descricao']);
-    $urgencia = $_POST['urgencia'];
-    $data_entrega = $_POST['data_entrega'];
-    $hora_entrega = $_POST['hora_entrega'];
+    $titulo = mysqli_real_escape_string($conexao, $_POST['titulo']);
+    $descricao = mysqli_real_escape_string($conexao, $_POST['descricao']);
+    $urgencia = (int)$_POST['urgencia'];
+    $data_entrega = mysqli_real_escape_string($conexao, $_POST['data_entrega']);
+    $hora_entrega = mysqli_real_escape_string($conexao, $_POST['hora_entrega']);
     
     // Validação simples
     $hoje = date('Y-m-d');
     if ($data_entrega && $data_entrega < $hoje) {
         $error_message = "Erro: A data de entrega não pode ser anterior à data atual.";
     } else {
-        $stmt = $pdo->prepare("UPDATE tarefas SET titulo = ?, descricao = ?, urgencia = ?, data_entrega = ?, hora_entrega = ? WHERE codigo = ? AND cod_user = ?");
-        $stmt->execute([$titulo, $descricao, $urgencia, $data_entrega, $hora_entrega, $tarefa_id, $_SESSION['user_id']]);
+        $sql = "UPDATE tarefas SET titulo = '$titulo', descricao = '$descricao', urgencia = $urgencia, data_entrega = '$data_entrega', hora_entrega = '$hora_entrega' 
+                WHERE codigo = $tarefa_id AND cod_user = $user_id";
         
-        ob_end_clean();
-        header("Location: tasks.php");
-        exit;
+        if (mysqli_query($conexao, $sql)) {
+            ob_end_clean();
+            header("Location: tasks.php");
+            exit;
+        } else {
+            $error_message = "Erro ao atualizar tarefa";
+        }
     }
 }
 ?>
@@ -54,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <section class="main">
         <div class="container mb-5" style="margin-top: 85px;">
             
-            <!-- Mostrar mensagem de erro se existir -->
             <?php if (isset($error_message)): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <?= $error_message ?>
@@ -105,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </main>
 
 <script>
-// JavaScript simples para definir data mínima
+
 document.addEventListener('DOMContentLoaded', function() {
     const dataInput = document.getElementById('data_entrega');
     if (dataInput) {

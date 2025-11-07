@@ -1,8 +1,5 @@
 <?php
-// arquivo para gerenciar as anotações
-
-ob_start(); // evita problemas com header
-
+ob_start();
 $page = 'notes';
 $title = 'Notas';
 include "../config.php";
@@ -13,34 +10,32 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// criar nova anotação
+$user_id = $_SESSION['user_id'];
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nova_nota'])) {
-    $titulo = $_POST['titulo'];
-    $anotacao = $_POST['anotacao'];
+    $titulo = mysqli_real_escape_string($conexao, $_POST['titulo']);
+    $anotacao = mysqli_real_escape_string($conexao, $_POST['anotacao']);
     $data_atual = date('Y-m-d');
     
-    try {
-        // insere a nova anotação no bd
-        $stmt = $pdo->prepare("INSERT INTO notas (cod_user, titulo, anotacao, data_criacao, data_modificacao) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$_SESSION['user_id'], $titulo, $anotacao, $data_atual, $data_atual]);
-        
-        // redireciona para a página de anotações
+    $sql = "INSERT INTO notas (cod_user, titulo, anotacao, data_criacao, data_modificacao) 
+            VALUES ($user_id, '$titulo', '$anotacao', '$data_atual', '$data_atual')";
+    
+    if (mysqli_query($conexao, $sql)) {
         ob_end_clean();
         header("Location: notes.php");
         exit;
-    } catch (PDOException $e) {
-        $error_message = "Erro ao criar anotação: " . $e->getMessage();
+    } else {
+        $error_message = "Erro ao criar anotação";
     }
 }
 
-// busca todas as anotações do usuário
-try {
-    $stmt = $pdo->prepare("SELECT * FROM notas WHERE cod_user = ? ORDER BY data_modificacao DESC");
-    $stmt->execute([$_SESSION['user_id']]);
-    $notes = $stmt->fetchAll();
-} catch (PDOException $e) {
-    $error_message = "Erro ao carregar anotações: " . $e->getMessage();
-    $notes = [];
+
+$sql = "SELECT * FROM notas WHERE cod_user = $user_id ORDER BY data_modificacao DESC";
+$result = mysqli_query($conexao, $sql);
+$notes = [];
+if ($result) {
+    $notes = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 ?>
 
@@ -49,12 +44,12 @@ try {
         <div class="container mb-5" style="margin-top: 85px;">
             <h2 class="text-center mb-5">Suas notas</h2>
             
-            <!-- Mostrar mensagem de erro se existir -->
+
             <?php if (isset($error_message)): ?>
                 <div class="alert alert-danger"><?= $error_message ?></div>
             <?php endif; ?>
             
-            <!-- Formulário para nova nota -->
+
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="card">
@@ -101,7 +96,7 @@ try {
                         </div>
                     </div>
 
-                    <!-- Modal -->
+                    <!-- modal -->
                     <div class="modal fade" id="modalNote<?= $note['codigo'] ?>" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-md">
                             <div class="modal-content">
@@ -129,6 +124,7 @@ try {
 
 <script>
 // função para excluir anotação
+// TODO: revisar
 document.querySelectorAll('.excluir-anotacao, .excluir-anotacao-modal').forEach(btn => {
     btn.addEventListener('click', function() {
         const anotacaoId = this.getAttribute('data-anotacao-id');

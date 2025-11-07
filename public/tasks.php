@@ -10,24 +10,33 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Buscar tarefas do usuário (não concluídas)
-$stmt = $pdo->prepare("SELECT * FROM tarefas WHERE cod_user = ? AND concluida = 0 ORDER BY data_entrega ASC");
-$stmt->execute([$_SESSION['user_id']]);
-$tasks = $stmt->fetchAll();
+$user_id = $_SESSION['user_id'];
 
-// Adicionar nova tarefa
+$sql = "SELECT * FROM tarefas WHERE cod_user = $user_id AND concluida = 0 ORDER BY data_entrega ASC";
+$result = mysqli_query($conexao, $sql);
+$tasks = [];
+if ($result) {
+    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nova_tarefa'])) {
-    $titulo = $_POST['titulo'];
-    $descricao = $_POST['descricao'];
-    $urgencia = $_POST['urgencia'];
-    $data_entrega = $_POST['data_entrega'];
-    $hora_entrega = $_POST['hora_entrega'];
+    $titulo = mysqli_real_escape_string($conexao, $_POST['titulo']);
+    $descricao = mysqli_real_escape_string($conexao, $_POST['descricao']);
+    $urgencia = (int)$_POST['urgencia'];
+    $data_entrega = mysqli_real_escape_string($conexao, $_POST['data_entrega']);
+    $hora_entrega = mysqli_real_escape_string($conexao, $_POST['hora_entrega']);
     
-    $stmt = $pdo->prepare("INSERT INTO tarefas (cod_user, titulo, descricao, urgencia, data_entrega, hora_entrega) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$_SESSION['user_id'], $titulo, $descricao, $urgencia, $data_entrega, $hora_entrega]);
-    ob_end_clean();
-    header("Location: tasks.php");
-    exit;
+    $sql = "INSERT INTO tarefas (cod_user, titulo, descricao, urgencia, data_entrega, hora_entrega) 
+            VALUES ($user_id, '$titulo', '$descricao', $urgencia, '$data_entrega', '$hora_entrega')";
+    
+    if (mysqli_query($conexao, $sql)) {
+        ob_end_clean();
+        header("Location: tasks.php");
+        exit;
+    } else {
+        $error = "Erro ao adicionar tarefa";
+    }
 }
 ?>
 
@@ -86,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nova_tarefa'])) {
             </div>
           </div>
 
-          <!-- Lista de Tarefas com Accordion -->
+          <!-- accordion tarefas -->
           <div class="card shadow-sm">
             <div class="card-header bg-light">
               <h5 class="card-title mb-0">Lista de Tarefas</h5>
@@ -166,9 +175,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nova_tarefa'])) {
     </div>
     </section>
   </main>
-
 <script>
 // Função para concluir tarefa
+//TODO: revisar
 document.querySelectorAll('.concluir-tarefa').forEach(checkbox => {
     checkbox.addEventListener('change', function() {
         const tarefaId = this.value;

@@ -14,14 +14,15 @@
 <body class="d-flex flex-column min-vh-100">
 
 <?php
-// inclui o gerenciador de sessão
+// gerenciador de sessao
 include "../session.php";
 
 // verifica se o usuario ta logado
 $user_logged = isset($_SESSION['user_id']);
 $user_name = $_SESSION['user_name'] ?? '';
 
-// inclui o navbar exceto na pagina de login e de registro
+
+// não exibe na pagina de login e de registro
 if ($page != 'login' && $page != 'register') {
     include 'navbar.php'; 
 }

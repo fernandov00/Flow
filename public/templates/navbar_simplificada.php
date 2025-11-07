@@ -1,5 +1,5 @@
 <?php
-// arquivo de navbar simplificada somente com o nome do site para a tela de registro
+// navbar simplificada somente com o nome do site para a tela de registro
 
 $links = [
   'index' => 'Início',

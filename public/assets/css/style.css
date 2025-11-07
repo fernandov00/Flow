@@ -128,3 +128,207 @@ button:disabled {
     content: " *";
     color: #dc3545;
 }
+
+/* Container principal do calendário */
+.calendar-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#calendar {
+    min-width: 300px; /* Largura mínima */
+    min-height: 400px;
+}
+
+/* Breakpoint específico para 900px - 1100px */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .fc-toolbar {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .fc-toolbar-chunk {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .fc-toolbar-chunk:first-child {
+        order: 1;
+        flex-basis: 40%;
+    }
+    
+    .fc-toolbar-chunk:nth-child(2) {
+        order: 3;
+        flex-basis: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
+    
+    .fc-toolbar-chunk:last-child {
+        order: 2;
+        flex-basis: 60%;
+        text-align: right;
+    }
+    
+    .fc .fc-toolbar-title {
+        font-size: 1.3em;
+        margin: 0;
+    }
+    
+    .fc-button {
+        padding: 6px 10px;
+        font-size: 0.85em;
+    }
+    
+    .fc-col-header-cell-cushion {
+        font-size: 0.85em;
+        padding: 6px 4px;
+    }
+    
+    .fc-daygrid-day-frame {
+        min-height: 80px;
+    }
+    
+    .fc-event {
+        font-size: 0.75em;
+        padding: 2px 4px;
+    }
+    
+    /* Ajustes específicos para a vista mensal */
+    .fc-dayGridMonth-view .fc-daygrid-day-number {
+        font-size: 0.8em;
+        padding: 2px;
+    }
+    
+    .fc-dayGridMonth-view .fc-event {
+        margin: 1px 0;
+    }
+}
+
+/* Breakpoint para tablets médios */
+@media (max-width: 991.98px) {
+    .fc-toolbar {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .fc-toolbar-chunk {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .fc-toolbar-chunk:last-child {
+        margin-top: 5px;
+    }
+    
+    .fc .fc-toolbar-title {
+        font-size: 1.4em;
+        margin: 5px 0;
+    }
+    
+    .fc-button-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+    
+    .fc-button {
+        flex: 1;
+        min-width: 80px;
+        max-width: 120px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767.98px) {
+    .fc .fc-toolbar-title {
+        font-size: 1.2em;
+    }
+    
+    .fc-button {
+        padding: 5px 8px;
+        font-size: 0.8em;
+    }
+    
+    .fc-col-header-cell-cushion {
+        font-size: 0.8em;
+        padding: 4px 2px;
+    }
+    
+    .fc-daygrid-day-frame {
+        min-height: 60px;
+    }
+    
+    .fc-event {
+        font-size: 0.7em;
+        padding: 1px 3px;
+    }
+    
+    /* Melhorar a visualização de lista para mobile */
+    .fc-list-day-cushion {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+    
+    .fc-list-event {
+        padding: 6px 8px;
+    }
+    
+    .fc-list-event-title {
+        font-size: 0.9em;
+    }
+}
+
+/* Mobile muito pequeno */
+@media (max-width: 575.98px) {
+    .fc .fc-toolbar-title {
+        font-size: 1.1em;
+    }
+    
+    .fc-button {
+        padding: 4px 6px;
+        font-size: 0.75em;
+    }
+    
+    .fc-col-header-cell {
+        font-size: 0.7em;
+    }
+    
+    .fc-daygrid-day-number {
+        font-size: 0.8em;
+    }
+    
+    .fc-timeGridDay-view .fc-timegrid-slot-label {
+        font-size: 0.7em;
+    }
+}
+
+/* Ajustes específicos para quando o calendário quebra */
+.fc .fc-scrollgrid {
+    min-width: 300px;
+}
+
+/* Garantir que as células não fiquem muito pequenas */
+.fc .fc-daygrid-day {
+    min-width: 30px;
+}
+
+/* Melhorar a legibilidade dos eventos */
+.fc-event-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+/* Ajustes para visualização de semana em telas médias */
+.fc-timeGridWeek-view .fc-timegrid-slot-label {
+    font-size: 0.8em;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-event {
+    font-size: 0.75em;
+}

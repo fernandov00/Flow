@@ -1,6 +1,4 @@
 <?php
-// arquivo para excluir uma anotação
-
 include "../config.php";
 
 if (!isset($_SESSION['user_id'])) {
@@ -8,15 +6,18 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$user_id = $_SESSION['user_id'];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // pega o id da anotação
-    $anotacao_id = $_POST['anotacao_id'];
+    $anotacao_id = (int)$_POST['anotacao_id'];
     
-    // deleta a anotação do bd, so se for de um usuario logado
-    $stmt = $pdo->prepare("DELETE FROM notas WHERE codigo = ? AND cod_user = ?");
-    $stmt->execute([$anotacao_id, $_SESSION['user_id']]);
+    $sql = "DELETE FROM notas WHERE codigo = $anotacao_id AND cod_user = $user_id";
     
-    echo "success";
+    if (mysqli_query($conexao, $sql)) {
+        echo "success";
+    } else {
+        echo "error";
+    }
     exit;
 }
 ?>

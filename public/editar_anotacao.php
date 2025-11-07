@@ -1,11 +1,7 @@
 <?php
-// arquivo para editar anotações
-
 ob_start();
-
 $page = 'notes';
 $title = 'Editar Anotação';
-
 include "../config.php";
 include "templates/head.php";
 
@@ -14,39 +10,39 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// pega o id da anotação
+$user_id = $_SESSION['user_id'];
 $anotacao_id = $_GET['id'] ?? null;
 
-// se nao tiver id, manda para a pagina de anotações
 if (!$anotacao_id) {
     header("Location: notes.php");
     exit;
 }
 
-// busca a anotaçao no bd garantindo que ela pertence ao usuario logado
-$stmt = $pdo->prepare("SELECT * FROM notas WHERE codigo = ? AND cod_user = ?");
-$stmt->execute([$anotacao_id, $_SESSION['user_id']]);
-$anotacao = $stmt->fetch();
+// busca a anotação
+$sql = "SELECT * FROM notas WHERE codigo = $anotacao_id AND cod_user = $user_id";
+$result = mysqli_query($conexao, $sql);
+$anotacao = mysqli_fetch_assoc($result);
 
-// se nao tiver anotação, manda para a pagina de anotações
 if (!$anotacao) {
     header("Location: notes.php");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // pega os dados da anotação
-    $titulo = $_POST['titulo'];
-    $anotacao_texto = $_POST['anotacao'];
+    $titulo = mysqli_real_escape_string($conexao, $_POST['titulo']);
+    $anotacao_texto = mysqli_real_escape_string($conexao, $_POST['anotacao']);
     $data_modificacao = date('Y-m-d');
     
-    // atualiza a anotação no bd
-    $stmt = $pdo->prepare("UPDATE notas SET titulo = ?, anotacao = ?, data_modificacao = ? WHERE codigo = ? AND cod_user = ?");
-    $stmt->execute([$titulo, $anotacao_texto, $data_modificacao, $anotacao_id, $_SESSION['user_id']]);
+    $sql = "UPDATE notas SET titulo = '$titulo', anotacao = '$anotacao_texto', data_modificacao = '$data_modificacao' 
+            WHERE codigo = $anotacao_id AND cod_user = $user_id";
     
-    ob_end_clean();
-    header("Location: notes.php");
-    exit;
+    if (mysqli_query($conexao, $sql)) {
+        ob_end_clean();
+        header("Location: notes.php");
+        exit;
+    } else {
+        $error_message = "Erro ao atualizar anotação";
+    }
 }
 ?>
 

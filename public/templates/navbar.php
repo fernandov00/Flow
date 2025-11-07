@@ -1,5 +1,5 @@
 <?php
-// arquivo para o navbar do site
+// navbar do site
 
 // links do menu
 $links = [
@@ -9,6 +9,7 @@ $links = [
 ];
 ?>
 
+<!-- codigo feito com bootstrap -->
 <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top border-bottom shadow-sm">
   <div class="container-fluid d-flex justify-content-between align-items-center mx-5">
 

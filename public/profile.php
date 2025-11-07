@@ -1,32 +1,30 @@
 <?php
-// arquivo para o perfil do usuário
-
 $page = 'profile';
 $title = 'Meu Perfil';
 
 include "../config.php";
 include "templates/head.php";
 
-// verifica se o usuario ta logado
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
 
-// buscar dados do usuário no bd
-$stmt = $pdo->prepare("SELECT * FROM usuario WHERE codigo = ?");
-$stmt->execute([$_SESSION['user_id']]);
-$user = $stmt->fetch();
+$user_id = $_SESSION['user_id'];
 
-// conta tarefas concluidas e anotações atuais do usuário
-$stmt_tasks = $pdo->prepare("SELECT COUNT(*) as total FROM tarefas WHERE cod_user = ? AND concluida = 1");
-$stmt_tasks->execute([$_SESSION['user_id']]);
-$total_tasks = $stmt_tasks->fetch()['total'];
+$sql = "SELECT * FROM usuario WHERE codigo = $user_id";
+$result = mysqli_query($conexao, $sql);
+$user = mysqli_fetch_assoc($result);
 
-$stmt_notes = $pdo->prepare("SELECT COUNT(*) as total FROM notas WHERE cod_user = ?");
-$stmt_notes->execute([$_SESSION['user_id']]);
-$total_notes = $stmt_notes->fetch()['total'];
+$sql_tasks = "SELECT COUNT(*) as total FROM tarefas WHERE cod_user = $user_id AND concluida = 1";
+$result_tasks = mysqli_query($conexao, $sql_tasks);
+$total_tasks = mysqli_fetch_assoc($result_tasks)['total'];
+
+$sql_notes = "SELECT COUNT(*) as total FROM notas WHERE cod_user = $user_id";
+$result_notes = mysqli_query($conexao, $sql_notes);
+$total_notes = mysqli_fetch_assoc($result_notes)['total'];
 ?>
+
   
 <main>
     <section class="main">

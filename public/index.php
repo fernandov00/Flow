@@ -5,21 +5,22 @@ $title = "Página Inicial";
 include "../config.php";
 include "templates/head.php";
 
-// Verificar se usuário está logado
 $user_logged = isset($_SESSION['user_id']);
 
 if ($user_logged) {
-    // Buscar anotações do usuário
-    $stmt_notes = $pdo->prepare("SELECT * FROM notas WHERE cod_user = ? ORDER BY data_modificacao DESC LIMIT 4");
-    $stmt_notes->execute([$_SESSION['user_id']]);
-    $notes = $stmt_notes->fetchAll();
+    $user_id = $_SESSION['user_id'];
+    
 
-    // Buscar tarefas do usuário (apenas não concluídas)
-    $stmt_tasks = $pdo->prepare("SELECT * FROM tarefas WHERE cod_user = ? AND concluida = 0 ORDER BY data_entrega ASC LIMIT 4");
-    $stmt_tasks->execute([$_SESSION['user_id']]);
-    $tasks = $stmt_tasks->fetchAll();
+    $sql_notes = "SELECT * FROM notas WHERE cod_user = $user_id ORDER BY data_modificacao DESC LIMIT 4";
+    $result_notes = mysqli_query($conexao, $sql_notes);
+    $notes = mysqli_fetch_all($result_notes, MYSQLI_ASSOC);
+
+
+    $sql_tasks = "SELECT * FROM tarefas WHERE cod_user = $user_id AND concluida = 0 ORDER BY data_entrega ASC LIMIT 4";
+    $result_tasks = mysqli_query($conexao, $sql_tasks);
+    $tasks = mysqli_fetch_all($result_tasks, MYSQLI_ASSOC);
 } else {
-    // Dados de exemplo para usuários não logados
+    // placeholders para não logado
     $notes = [
         ['codigo' => 1, 'titulo' => 'Revisar o conteúdo de algoritmos antes da prova de quinta.'],
         ['codigo' => 2, 'titulo' => 'Criar um app de lista de compras com modo offline e sincronização automática.']
@@ -131,7 +132,9 @@ if ($user_logged) {
         <div class="d-none d-lg-block col-lg-1"></div>
         <div class="col-12 col-md-6 col-lg-7 p-2">
           <h2 class="text-center text-lg-start">Calendário</h2>
-          <div id="calendar"></div>
+          <div class="calendar-container">
+                <div id="calendar"></div>
+            </div>
           <?php if (!$user_logged): ?>
           <div class="alert alert-warning text-center mt-3">
             <small>Faça login para visualizar seu calendário pessoal</small>
@@ -144,7 +147,7 @@ if ($user_logged) {
   </main>
 
 <?php if ($user_logged): ?>
-<!-- Modal para nova anotação rápida -->
+<!-- modal nova nota -->
 <div class="modal fade" id="modalNovaAnotacao" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -172,7 +175,7 @@ if ($user_logged) {
     </div>
 </div>
 
-<!-- Modal para nova tarefa rápida -->
+<!-- modal nova tarefa -->
 <div class="modal fade" id="modalNovaTarefa" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -218,7 +221,7 @@ if ($user_logged) {
     </div>
 </div>
 
-<!-- Modais para anotações -->
+<!-- modal notas -->
 <?php foreach ($notes as $note): ?>
 <div class="modal fade" id="modalNote<?= $note['codigo'] ?>" tabindex="-1">
     <div class="modal-dialog modal-dialog-scrollable modal-md">
@@ -240,7 +243,7 @@ if ($user_logged) {
 </div>
 <?php endforeach; ?>
 
-<!-- Modais para tarefas -->
+<!-- modal tarefas -->
 <?php foreach ($tasks as $task): ?>
 <div class="modal fade" id="modalTask<?= $task['codigo'] ?>" tabindex="-1">
     <div class="modal-dialog modal-dialog-scrollable modal-md">
@@ -267,13 +270,11 @@ if ($user_logged) {
 <?php endif; ?>
 
 <script>
-// Função para redirecionar para login
 function redirectToLogin() {
     window.location.href = 'login.php';
 }
 
 <?php if ($user_logged): ?>
-// Funções para gerar os placeholders
 function getPlaceholderAnotacoes() {
     return `
         <div class="text-center py-3" id="placeholder-anotacoes">
@@ -301,7 +302,6 @@ function getPlaceholderTarefas() {
     `;
 }
 
-// Função para verificar e mostrar placeholder de anotações
 function verificarAnotacoes() {
     const listaAnotacoes = document.getElementById('lista-anotacoes');
     const containerAnotacoes = document.getElementById('anotacoes-container');
@@ -312,7 +312,6 @@ function verificarAnotacoes() {
     }
 }
 
-// Função para verificar e mostrar placeholder de tarefas
 function verificarTarefas() {
     const listaTarefas = document.getElementById('lista-tarefas');
     const containerTarefas = document.getElementById('tarefas-container');
@@ -323,7 +322,6 @@ function verificarTarefas() {
     }
 }
 
-// Função para salvar anotação rápida
 document.getElementById('btnSalvarAnotacaoRapida').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('formNovaAnotacaoRapida'));
     formData.append('nova_nota', 'true');
@@ -334,14 +332,11 @@ document.getElementById('btnSalvarAnotacaoRapida').addEventListener('click', fun
     })
     .then(response => {
         if (response.ok) {
-            // Fecha o modal
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalNovaAnotacao'));
             modal.hide();
             
-            // Limpa o formulário
             document.getElementById('formNovaAnotacaoRapida').reset();
             
-            // Recarrega a página para mostrar a nova anotação
             location.reload();
         }
     })
@@ -350,7 +345,7 @@ document.getElementById('btnSalvarAnotacaoRapida').addEventListener('click', fun
     });
 });
 
-// Função para concluir tarefa
+
 document.querySelectorAll('.concluir-tarefa').forEach(checkbox => {
     checkbox.addEventListener('change', function() {
         const tarefaId = this.value;
@@ -385,7 +380,7 @@ document.querySelectorAll('.concluir-tarefa').forEach(checkbox => {
     });
 });
 
-// Função para excluir anotação
+
 document.querySelectorAll('.excluir-anotacao-modal').forEach(btn => {
     btn.addEventListener('click', function() {
         const anotacaoId = this.getAttribute('data-anotacao-id');
@@ -401,17 +396,14 @@ document.querySelectorAll('.excluir-anotacao-modal').forEach(btn => {
             .then(response => response.text())
             .then(data => {
                 if (data === 'success') {
-                    // Remove a anotação da lista
                     const anotacaoItem = document.querySelector(`[data-anotacao-id="${anotacaoId}"]`);
                     if (anotacaoItem) {
                         anotacaoItem.style.opacity = '0.5';
                         setTimeout(() => {
                             anotacaoItem.remove();
                             
-                            // Verifica se precisa mostrar o placeholder
                             verificarAnotacoes();
                             
-                            // Fecha o modal se estiver aberto
                             const modal = bootstrap.Modal.getInstance(document.getElementById('modalNote' + anotacaoId));
                             if (modal) {
                                 modal.hide();
@@ -424,7 +416,7 @@ document.querySelectorAll('.excluir-anotacao-modal').forEach(btn => {
     });
 });
 
-// Função para excluir tarefa
+
 document.querySelectorAll('.excluir-tarefa-modal').forEach(btn => {
     btn.addEventListener('click', function() {
         const tarefaId = this.getAttribute('data-tarefa-id');
@@ -440,23 +432,21 @@ document.querySelectorAll('.excluir-tarefa-modal').forEach(btn => {
             .then(response => response.text())
             .then(data => {
                 if (data === 'success') {
-                    // Remove a tarefa da lista
+
                     const tarefaItem = document.querySelector(`[data-tarefa-id="${tarefaId}"]`);
                     if (tarefaItem) {
                         tarefaItem.style.opacity = '0.5';
                         setTimeout(() => {
                             tarefaItem.remove();
                             
-                            // Verifica se precisa mostrar o placeholder
                             verificarTarefas();
                             
-                            // Fecha o modal se estiver aberto
+
                             const modal = bootstrap.Modal.getInstance(document.getElementById('modalTask' + tarefaId));
                             if (modal) {
                                 modal.hide();
                             }
                             
-                            // Atualiza o calendário
                             if (typeof calendar !== 'undefined') {
                                 calendar.refetchEvents();
                             }
@@ -468,7 +458,7 @@ document.querySelectorAll('.excluir-tarefa-modal').forEach(btn => {
     });
 });
 
-// Função para salvar tarefa rápida
+
 document.getElementById('btnSalvarTarefaRapida').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('formNovaTarefaRapida'));
     formData.append('nova_tarefa', 'true');
@@ -479,20 +469,17 @@ document.getElementById('btnSalvarTarefaRapida').addEventListener('click', funct
     })
     .then(response => {
         if (response.ok) {
-            // Fecha o modal
+
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalNovaTarefa'));
             modal.hide();
             
-            // Limpa o formulário
             document.getElementById('formNovaTarefaRapida').reset();
-            
-            // Recarrega a página para mostrar a nova tarefa
+        
             location.reload();
         }
     });
 });
 
-// Inicialização do calendário
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
     if (calendarEl) {
@@ -517,7 +504,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         calendar.render();
         
-        // Torna o calendário acessível globalmente para as outras funções
         window.calendar = calendar;
     }
 });

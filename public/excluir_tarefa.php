@@ -1,6 +1,4 @@
 <?php
-// arquivo para excluir uma tarefa
-
 include "../config.php";
 
 if (!isset($_SESSION['user_id'])) {
@@ -8,15 +6,18 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$user_id = $_SESSION['user_id'];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // pega o id da tarefa
-    $tarefa_id = $_POST['tarefa_id'];
+    $tarefa_id = (int)$_POST['tarefa_id'];
     
-    // deleta a tarefa do bd, so se for de um usuario logado
-    $stmt = $pdo->prepare("DELETE FROM tarefas WHERE codigo = ? AND cod_user = ?");
-    $stmt->execute([$tarefa_id, $_SESSION['user_id']]);
+    $sql = "DELETE FROM tarefas WHERE codigo = $tarefa_id AND cod_user = $user_id";
     
-    echo "success";
+    if (mysqli_query($conexao, $sql)) {
+        echo "success";
+    } else {
+        echo "error";
+    }
     exit;
 }
 ?>

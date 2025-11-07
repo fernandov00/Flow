@@ -1,5 +1,4 @@
 <?php
-
 include "../config.php";
 
 if (!isset($_SESSION['user_id'])) {
@@ -7,24 +6,24 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$user_id = $_SESSION['user_id'];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // pega o id da tarefa e se foi concluida
-    $tarefa_id = $_POST['tarefa_id'];
-    $concluida = $_POST['concluida'];
+    $tarefa_id = (int)$_POST['tarefa_id'];
+    $concluida = (int)$_POST['concluida'];
     
     if ($concluida) {
-        // se foi concluida, salva a data
         $data_conclusao = date('Y-m-d H:i:s');
-        $stmt = $pdo->prepare("UPDATE tarefas SET concluida = 1, data_conclusao = ? WHERE codigo = ? AND cod_user = ?");
-        $stmt->execute([$data_conclusao, $tarefa_id, $_SESSION['user_id']]);
+        $sql = "UPDATE tarefas SET concluida = 1, data_conclusao = '$data_conclusao' WHERE codigo = $tarefa_id AND cod_user = $user_id";
     } else {
-        // se foi desmarcada, remove a data
-        $stmt = $pdo->prepare("UPDATE tarefas SET concluida = 0, data_conclusao = NULL WHERE codigo = ? AND cod_user = ?");
-        $stmt->execute([$tarefa_id, $_SESSION['user_id']]);
+        $sql = "UPDATE tarefas SET concluida = 0, data_conclusao = NULL WHERE codigo = $tarefa_id AND cod_user = $user_id";
     }
     
-    // retorna sucess para o js saber que deu certo
-    echo "success";
+    if (mysqli_query($conexao, $sql)) {
+        echo "success";
+    } else {
+        echo "error";
+    }
     exit;
 }
 ?>

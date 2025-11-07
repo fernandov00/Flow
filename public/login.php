@@ -1,5 +1,4 @@
 <?php 
-// arquivo para fazer o login do usuário
 
 $title = "Login";
 $page = 'login';
@@ -7,20 +6,19 @@ $page = 'login';
 include "../config.php";
 include "templates/head.php";
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //verifica se o formulario foi enviado
-    $email = $_POST['email']; // pega o email
-    $senha = $_POST['senha']; // pega a senha
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'];
+    $senha = $_POST['senha']; 
     
-    // faz a busca no bd pelo email
-    $stmt = $pdo->prepare("SELECT * FROM usuario WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
+
+    $sql = "SELECT * FROM usuario WHERE email = '$email' AND senha = '$senha'";
+    $resultado = mysqli_query($conexao, $sql);
     
-    // verifica se o usuario existe e se a senha ta correta
-    if ($user && password_verify($senha, $user['senha'])) {
+    if (mysqli_num_rows($resultado) > 0) {
+        $user = mysqli_fetch_assoc($resultado);
         $_SESSION['user_id'] = $user['codigo'];
         $_SESSION['user_name'] = $user['primeiro_nome'];
-        header("Location: index.php"); // se tudo certo, manda para a pagina principal
+        header("Location: index.php");
         exit;
     } else {
         $error = "Email ou senha incorretos!";

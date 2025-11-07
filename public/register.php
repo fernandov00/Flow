@@ -1,5 +1,5 @@
 <?php
-// arquivo para fazer o registro do usuário
+
 
 $title = "Registro";
 $page = 'register';
@@ -9,26 +9,26 @@ include "templates/head.php";
 include "templates/navbar_simplificada.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //coleta os dados
     $primeiro_nome = $_POST['primeiro_nome'];
     $nome_meio = $_POST['nome_meio'];
     $ultimo_nome = $_POST['ultimo_nome'];
     $email = $_POST['email'];
-    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); //criptografa a senha
+    $senha = $_POST['senha']; 
     $data_nascimento = $_POST['data_nascimento'];
     
-    try {
-        // insere os dados do usuario no bd
-        $stmt = $pdo->prepare("INSERT INTO usuario (primeiro_nome, nome_meio, ultimo_nome, email, senha, data_nascimento) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$primeiro_nome, $nome_meio, $ultimo_nome, $email, $senha, $data_nascimento]);
-        
-        // pega o id do usario criado e salva na sessão atual
-        $_SESSION['user_id'] = $pdo->lastInsertId();
+    
+    $sql = "INSERT INTO usuario (primeiro_nome, nome_meio, ultimo_nome, email, senha, data_nascimento) 
+            VALUES ('$primeiro_nome', '$nome_meio', '$ultimo_nome', '$email', '$senha', '$data_nascimento')";
+    
+    $resultado = mysqli_query($conexao, $sql);
+    
+    if ($resultado) {
+        $_SESSION['user_id'] = mysqli_insert_id($conexao);
         $_SESSION['user_name'] = $primeiro_nome;
         header("Location: index.php");
         exit;
-    } catch (PDOException $e) {
-        $error = "Erro ao criar conta: " . $e->getMessage();
+    } else {
+        $error = "Erro ao criar conta: " . mysqli_error($conexao);
     }
 }
 ?>
@@ -85,6 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </main>
 
 <script>
+//TODO: revisar
 document.addEventListener('DOMContentLoaded', function() {
     const senhaInput = document.getElementById('senha');
     const confirmarSenhaInput = document.getElementById('confirmar_senha');
