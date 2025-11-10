@@ -1,7 +1,6 @@
 <?php
 // navbar do site
 
-// links do menu
 $links = [
   'index' => 'Início',
   'tasks' => 'Tarefas',
@@ -52,7 +51,6 @@ $links = [
   </div>
 </nav>
 
-<!-- Sidebar Lateral do Usuário -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="userSidebar" aria-labelledby="userSidebarLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="userSidebarLabel">Minha Conta</h5>
@@ -93,7 +91,6 @@ $links = [
       </div>
     </div>
 
-    <!-- Formulário invisível para logout -->
     <form id="logoutForm" action="../logout.php" method="POST" style="display: none;">
     </form>
   </div>

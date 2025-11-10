@@ -143,7 +143,7 @@ button:disabled {
 }
 
 /* Breakpoint específico para 900px - 1100px */
-@media (min-width: 992px) and (max-width: 1199.98px) {
+@media (min-width: 992px) and (max-width: 1200px) {
     .fc-toolbar {
         flex-wrap: wrap;
         gap: 10px;

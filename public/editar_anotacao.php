@@ -18,7 +18,7 @@ if (!$anotacao_id) {
     exit;
 }
 
-// busca a anotação
+// busca anotação
 $sql = "SELECT * FROM notas WHERE codigo = $anotacao_id AND cod_user = $user_id";
 $result = mysqli_query($conexao, $sql);
 $anotacao = mysqli_fetch_assoc($result);

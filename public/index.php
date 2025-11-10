@@ -270,6 +270,7 @@ if ($user_logged) {
 <?php endif; ?>
 
 <script>
+//TODO: revisar
 function redirectToLogin() {
     window.location.href = 'login.php';
 }

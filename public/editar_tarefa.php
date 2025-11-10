@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data_entrega = mysqli_real_escape_string($conexao, $_POST['data_entrega']);
     $hora_entrega = mysqli_real_escape_string($conexao, $_POST['hora_entrega']);
     
-    // Validação simples
+
     $hoje = date('Y-m-d');
     if ($data_entrega && $data_entrega < $hoje) {
         $error_message = "Erro: A data de entrega não pode ser anterior à data atual.";
