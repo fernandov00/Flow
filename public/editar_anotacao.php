@@ -33,8 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $anotacao_texto = mysqli_real_escape_string($conexao, $_POST['anotacao']);
     $data_modificacao = date('Y-m-d');
     
-    $sql = "UPDATE notas SET titulo = '$titulo', anotacao = '$anotacao_texto', data_modificacao = '$data_modificacao' 
-            WHERE codigo = $anotacao_id AND cod_user = $user_id";
+    $sql = "UPDATE notas SET titulo = '$titulo', anotacao = '$anotacao_texto', data_modificacao = '$data_modificacao' WHERE codigo = $anotacao_id AND cod_user = $user_id";
     
     if (mysqli_query($conexao, $sql)) {
         ob_end_clean();

@@ -39,8 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($data_entrega && $data_entrega < $hoje) {
         $error_message = "Erro: A data de entrega não pode ser anterior à data atual.";
     } else {
-        $sql = "UPDATE tarefas SET titulo = '$titulo', descricao = '$descricao', urgencia = $urgencia, data_entrega = '$data_entrega', hora_entrega = '$hora_entrega' 
-                WHERE codigo = $tarefa_id AND cod_user = $user_id";
+        $sql = "UPDATE tarefas SET titulo = '$titulo', descricao = '$descricao', urgencia = $urgencia, data_entrega = '$data_entrega', hora_entrega = '$hora_entrega' WHERE codigo = $tarefa_id AND cod_user = $user_id";
         
         if (mysqli_query($conexao, $sql)) {
             ob_end_clean();
