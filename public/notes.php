@@ -122,12 +122,15 @@ if ($result) {
 </main>
 
 <script>
-// função para excluir anotação
-// TODO: revisar
+// TODO: revisado
+
+//lista todos os botoes de excluir anotaçao, tanto da pagina quanto modais
 document.querySelectorAll('.excluir-anotacao, .excluir-anotacao-modal').forEach(btn => {
+    //se algum for clicado executa a funcao
     btn.addEventListener('click', function() {
         const anotacaoId = this.getAttribute('data-anotacao-id');
         
+        //far uma confirmaçao e manda os dados para 'excluir_anotacao.php'
         if (confirm('Tem certeza que deseja excluir esta anotação?')) {
             fetch('excluir_anotacao.php', {
                 method: 'POST',
@@ -140,14 +143,11 @@ document.querySelectorAll('.excluir-anotacao, .excluir-anotacao-modal').forEach(
             .then(data => {
                 if (data === 'success') {
                     
-                    location.reload(); // recarrega a página para atualizar a lista
+                    location.reload(); 
                 } else {
                     alert('Erro ao excluir anotação.');
                 }
             })
-            .catch(error => {
-                alert('Erro ao excluir anotação: ' + error);
-            });
         }
     });
 });

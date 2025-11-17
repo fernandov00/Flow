@@ -270,7 +270,7 @@ if ($user_logged) {
 <?php endif; ?>
 
 <script>
-//TODO: revisar
+//TODO: revisado
 function redirectToLogin() {
     window.location.href = 'login.php';
 }
@@ -323,6 +323,8 @@ function verificarTarefas() {
     }
 }
 
+
+//funcao que salva nota rapida (diretamente da pagina principal)
 document.getElementById('btnSalvarAnotacaoRapida').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('formNovaAnotacaoRapida'));
     formData.append('nova_nota', 'true');
@@ -346,7 +348,7 @@ document.getElementById('btnSalvarAnotacaoRapida').addEventListener('click', fun
     });
 });
 
-
+//funcao que conclui as tarefas diretamente da index
 document.querySelectorAll('.concluir-tarefa').forEach(checkbox => {
     checkbox.addEventListener('change', function() {
         const tarefaId = this.value;
@@ -361,17 +363,17 @@ document.querySelectorAll('.concluir-tarefa').forEach(checkbox => {
         })
         .then(response => response.text())
         .then(data => {
+
             if (data === 'success') {
-                // Remove a tarefa da lista
+                // remova a tarefa apos 500 milissegundos
                 const tarefaItem = this.closest('.tarefa-item');
                 tarefaItem.style.opacity = '0.5';
                 setTimeout(() => {
                     tarefaItem.remove();
                     
-                    // Verifica se precisa mostrar o placeholder
                     verificarTarefas();
                     
-                    // Atualiza o calendário
+                    // atualiza o calendario
                     if (typeof calendar !== 'undefined') {
                         calendar.refetchEvents();
                     }
@@ -382,6 +384,7 @@ document.querySelectorAll('.concluir-tarefa').forEach(checkbox => {
 });
 
 
+//exclui anotaçoes dentro da modal
 document.querySelectorAll('.excluir-anotacao-modal').forEach(btn => {
     btn.addEventListener('click', function() {
         const anotacaoId = this.getAttribute('data-anotacao-id');
@@ -417,7 +420,7 @@ document.querySelectorAll('.excluir-anotacao-modal').forEach(btn => {
     });
 });
 
-
+//exclui tarefas dentro da modal
 document.querySelectorAll('.excluir-tarefa-modal').forEach(btn => {
     btn.addEventListener('click', function() {
         const tarefaId = this.getAttribute('data-tarefa-id');
@@ -459,7 +462,7 @@ document.querySelectorAll('.excluir-tarefa-modal').forEach(btn => {
     });
 });
 
-
+//salva tarefas rapidas (direto da index)
 document.getElementById('btnSalvarTarefaRapida').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('formNovaTarefaRapida'));
     formData.append('nova_tarefa', 'true');
@@ -481,33 +484,34 @@ document.getElementById('btnSalvarTarefaRapida').addEventListener('click', funct
     });
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
-    if (calendarEl) {
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            themeSystem: 'bootstrap5',
-            locale: 'pt-br',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            selectable: true,
-            editable: true,
-            events: 'get_events.php',
-            dateClick: function(info) {
-                alert('Você clicou em: ' + info.dateStr);
-            },
-            eventClick: function(info) {
-                alert('Evento: ' + info.event.title + '\nDescrição: ' + (info.event.extendedProps.description || 'Sem descrição'));
-            }
-        });
-        calendar.render();
+
+// document.addEventListener('DOMContentLoaded', function () {
+//     var calendarEl = document.getElementById('calendar');
+//     if (calendarEl) {
+//         var calendar = new FullCalendar.Calendar(calendarEl, {
+//             initialView: 'dayGridMonth',
+//             themeSystem: 'bootstrap5',
+//             locale: 'pt-br',
+//             headerToolbar: {
+//                 left: 'prev,next today',
+//                 center: 'title',
+//                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
+//             },
+//             selectable: true,
+//             editable: true,
+//             events: 'get_events.php',
+//             dateClick: function(info) {
+//                 alert('Você clicou em: ' + info.dateStr);
+//             },
+//             eventClick: function(info) {
+//                 alert('Evento: ' + info.event.title + '\nDescrição: ' + (info.event.extendedProps.description || 'Sem descrição'));
+//             }
+//         });
+//         calendar.render();
         
-        window.calendar = calendar;
-    }
-});
+//         window.calendar = calendar;
+//     }
+// });
 <?php endif; ?>
 </script>
 

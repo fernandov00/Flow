@@ -176,13 +176,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nova_tarefa'])) {
     </section>
   </main>
 <script>
-// Função para concluir tarefa
-//TODO: revisar
+
+//TODO: revisado
+
+//lista todos os elementos   'concluir-tarefa'
 document.querySelectorAll('.concluir-tarefa').forEach(checkbox => {
+  //se o checkbox mudar, executa a funcao
     checkbox.addEventListener('change', function() {
         const tarefaId = this.value;
         const concluida = this.checked;
         
+        //leva os dados a concluir_tarefa
         fetch('concluir_tarefa.php', {
             method: 'POST',
             headers: {
@@ -190,21 +194,25 @@ document.querySelectorAll('.concluir-tarefa').forEach(checkbox => {
             },
             body: `tarefa_id=${tarefaId}&concluida=${concluida ? 1 : 0}`
         })
+
+        //atualiza a pagina para atualizar a lista
         .then(response => response.text())
         .then(data => {
             if (data === 'success') {
-                // Recarrega a página para atualizar a lista
+              
                 location.reload();
             }
         });
     });
 });
 
-// Função para excluir tarefa
+
+//lista todos elementos 'excluir-tarefa'
 document.querySelectorAll('.excluir-tarefa').forEach(btn => {
+  //se o botao for clicado, executa a funcao
     btn.addEventListener('click', function() {
         const tarefaId = this.getAttribute('data-tarefa-id');
-        
+        //solicita confirmação e envia os dados para excluir_tarefa.php
         if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
             fetch('excluir_tarefa.php', {
                 method: 'POST',
@@ -216,7 +224,6 @@ document.querySelectorAll('.excluir-tarefa').forEach(btn => {
             .then(response => response.text())
             .then(data => {
                 if (data === 'success') {
-                    // Recarrega a página para atualizar a lista
                     location.reload();
                 }
             });

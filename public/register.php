@@ -68,6 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="col-md-6">
                 <label for="confirmar_senha" class="form-label">Confirme a senha</label>
                 <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha" required>
+
+                <!-- esta div sera ativada quando o input possuir is-invalid -->
                 <div class="invalid-feedback" id="passwordError">
                     As senhas não coincidem.
                 </div>
@@ -85,15 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </main>
 
 <script>
-//TODO: revisar
+//TODO: revisado
+
 document.addEventListener('DOMContentLoaded', function() {
     const senhaInput = document.getElementById('senha');
     const confirmarSenhaInput = document.getElementById('confirmar_senha');
-    const passwordError = document.getElementById('passwordError');
     const submitBtn = document.getElementById('submitBtn');
     const registerForm = document.getElementById('registerForm');
     
-    function verificarSenhas() { // função para verificar as senhas
+//funcao utilizada para avisar em tempo real que as senhas não batem
+    function verificarSenhas() { 
         const senha = senhaInput.value;
         const confirmarSenha = confirmarSenhaInput.value;
         
@@ -108,11 +111,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // verifica quando o usuário digitar em qualquer um dos campos de senha
+    // verifica quando o usuario digitar em qualquer um dos campos de senha
     senhaInput.addEventListener('input', verificarSenhas);
     confirmarSenhaInput.addEventListener('input', verificarSenhas);
     
-    // verifica também quando o formulário for enviado
+    // verifica tambem quando o formulário for enviado
     registerForm.addEventListener('submit', function(e) {
         if (!verificarSenhas()) {
             e.preventDefault();
@@ -120,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // verifica as senhas ao carregar a página
     verificarSenhas();
 });
 </script>
